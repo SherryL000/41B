@@ -3,7 +3,7 @@ require('dotenv').config();
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://1111:1111@cluster0.gkijine.mongodb.net/todo?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;
 
-console.log('🔗 使用的连接字符串:', MONGODB_URI);
+
 
 const express = require('express');
 const mongoose = require('mongoose');
