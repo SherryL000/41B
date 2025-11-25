@@ -80,7 +80,7 @@ app.use('/tasks', requireAuth, taskRoutes);
 
 // Home page
 app.get('/', (req, res) => {
-  res.render('home', { title: 'Home - Todo App' });
+  res.render('index', { title: 'Index - Todo App' });
 });
 
 app.get('/time', (req, res) => {
