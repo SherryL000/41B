@@ -1,0 +1,224 @@
+
+<html>
+<head><title>Tasks</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+ <div class="container">
+    <header class="page-header">
+      <h1><i class="fas fa-clock"></i> Timer</h1>
+      <div class="user-info">
+        <a href="/tasks" class="btn btn-secondary">
+          <i class="fas fa-tasks"></i> Back to Tasks
+        </a>
+      </div>
+    </header>
+    
+    <section class="card">
+      <h2 class="text-center">Countdown Timer</h2>
+      
+      <div class="time-input-section">
+        <div class="time-input">
+          <label for="hours">Hours</label>
+          <input type="number" id="hours" min="0" max="23" value="0">
+        </div>
+        <div class="time-separator">:</div>
+        <div class="time-input">
+          <label for="minutes">Minutes</label>
+          <input type="number" id="minutes" min="0" max="59" value="25">
+        </div>
+        <div class="time-separator">:</div>
+        <div class="time-input">
+          <label for="seconds">Seconds</label>
+          <input type="number" id="seconds" min="0" max="59" value="0">
+        </div>
+      </div>
+      
+      <div class="text-center mb-4">
+        <button class="btn btn-primary" id="setBtn">
+          <i class="fas fa-cog"></i> Set Time
+        </button>
+      </div>
+      
+      <div class="timer-progress">
+        <div class="timer-progress-bar" id="progressBar"></div>
+      </div>
+      
+      <div class="timer-display" id="timerDisplay">
+        25:00
+      </div>
+      
+      <div class="timer-status" id="timerStatus">
+        Ready to start
+      </div>
+      
+      <div class="timer-controls">
+        <button class="btn btn-success" id="startBtn">
+          <i class="fas fa-play"></i> Start
+        </button>
+        <button class="btn btn-danger" id="stopBtn" disabled>
+          <i class="fas fa-stop"></i> Stop
+        </button>
+      </div>
+    </section>
+    
+    
+  </div>
+
+
+<script>
+       
+        let timerInterval;
+        let remainingTime = 25 * 60; 
+        let isRunning = false;
+
+   
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerStatus = document.getElementById('timerStatus');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const setBtn = document.getElementById('setBtn');
+        const hoursInput = document.getElementById('hours');
+        const minutesInput = document.getElementById('minutes');
+        const secondsInput = document.getElementById('seconds');
+
+     
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = seconds % 60;
+            
+            if (hours > 0) {
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            } else {
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+   
+        function updateDisplay() {
+            timerDisplay.textContent = formatTime(remainingTime);
+        }
+
+      
+        function setTimerTime() {
+            if (isRunning) {
+                stopTimer();
+            }
+            
+            const hours = parseInt(hoursInput.value) || 0;
+            const minutes = parseInt(minutesInput.value) || 0;
+            const seconds = parseInt(secondsInput.value) || 0;
+            
+         
+            remainingTime = hours * 3600 + minutes * 60 + seconds;
+            
+            
+            if (remainingTime <= 0) {
+                timerStatus.textContent = "Please set vaild time";
+                timerStatus.style.color = "#e74c3c";
+                return;
+            }
+            
+            updateDisplay();
+            timerStatus.textContent = "Ready to start";
+            timerStatus.style.color = "#3498db";
+        }
+        
+      
+        function enableTimeSetting() {
+            hoursInput.disabled = false;
+            minutesInput.disabled = false;
+            secondsInput.disabled = false;
+            setBtn.disabled = false;
+            }
+
+    
+        function disableTimeSetting() {
+            hoursInput.disabled = true;
+            minutesInput.disabled = true;
+            secondsInput.disabled = true;
+            setBtn.disabled = true;
+            }
+        // 开始计时器
+        function startTimer() {
+            if (isRunning) return;
+            
+            // 如果时间为0，不能开始
+            if (remainingTime <= 0) {
+                timerStatus.textContent = "Please set vaild time";
+                timerStatus.style.color = "#e74c3c";
+                return;
+            }
+            
+            isRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            disableTimeSetting();
+            timerStatus.textContent = "Counting Down";
+            timerStatus.style.color = "#27ae60";
+
+            timerInterval = setInterval(() => {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    updateDisplay();
+                } else {
+                    timerComplete();
+                }
+            }, 1000);
+        }
+
+        // 停止计时器
+        function stopTimer() {
+            if (!isRunning) return;
+            
+            isRunning = false;
+            clearInterval(timerInterval);
+            startBtn.disabled = false;
+            enableTimeSetting();
+            stopBtn.disabled = true;
+            timerStatus.textContent = "stopped";
+            timerStatus.style.color = "#f39c12";
+        }
+
+        // 计时器完成
+        function timerComplete() {
+            stopTimer();
+            timerStatus.textContent = "Time's up！";
+            timerStatus.style.color = "#e74c3c";
+            
+            // 闪烁效果
+            
+        }
+
+        // 按钮事件监听
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        setBtn.addEventListener('click', setTimerTime);
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (isRunning) {
+                    stopTimer();
+                } else {
+                    startTimer();
+                }
+            }
+            
+            // Enter键设置时间
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                setTimerTime();
+            }
+        });
+
+        // 输入框变化时实时更新显示（可选）
+        hoursInput.addEventListener('input', setTimerTime);
+        minutesInput.addEventListener('input', setTimerTime);
+        secondsInput.addEventListener('input', setTimerTime);
+
+        // 初始化显示
+        updateDisplay();
+    </script>
+</body>
+</html>

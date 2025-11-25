@@ -1,0 +1,71 @@
+<%- include('partials/header') %>
+
+<div class="container home-container">
+  <div class="hero-section text-center">
+    <h1 class="hero-title">
+      <i class="fas fa-check-circle"></i>
+      Welcome to Todo App
+    </h1>
+    <p class="hero-subtitle">Organize your tasks and boost your productivity</p>
+    
+    <div class="hero-buttons">
+      <% if (!user) { %>
+        <a href="/auth/login" class="btn btn-primary btn-lg">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="/auth/register" class="btn btn-secondary btn-lg">
+          <i class="fas fa-user-plus"></i> Register
+        </a>
+      <% } else { %>
+        <a href="/tasks" class="btn btn-primary btn-lg">
+          <i class="fas fa-tasks"></i> View My Tasks
+        </a>
+        <form action="/auth/logout" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-secondary btn-lg">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="features-section">
+  <div class="features-container">
+    <!-- Feature 1 -->
+    <div class="feature-card-rectangle">
+      <div class="feature-icon">
+        <i class="fas fa-plus-circle"></i>
+      </div>
+      <h3 class="feature-title">Add Tasks</h3>
+      <p class="feature-description">
+        Create new tasks with titles, descriptions, due dates, and priorities. 
+        Stay organized with our intuitive task creation system.
+      </p>
+    </div>
+    
+    <!-- Feature 2 -->
+    <div class="feature-card-rectangle">
+      <div class="feature-icon">
+        <i class="fas fa-edit"></i>
+      </div>
+      <h3 class="feature-title">Edit & Update</h3>
+      <p class="feature-description">
+        Modify your tasks and track their progress with status updates. 
+        Keep your tasks current and relevant with easy editing.
+      </p>
+    </div>
+    
+    <!-- Feature 3 -->
+    <div class="feature-card-rectangle">
+      <div class="feature-icon">
+        <i class="fas fa-search"></i>
+      </div>
+      <h3 class="feature-title">Search & Filter</h3>
+      <p class="feature-description">
+        Find tasks quickly with search and filter by priority. 
+        Manage large task lists efficiently with powerful filtering options.
+      </p>
+    </div>
+  </div>
+</div>
+</div>

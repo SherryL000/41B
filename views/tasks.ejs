@@ -1,0 +1,110 @@
+<%- include('partials/header') %>
+
+<div class="container">
+  <header class="page-header">
+    <h1><i class="fas fa-tasks"></i> My Tasks</h1>
+    <div class="user-info">
+      Welcome, <strong><%= user.username %></strong>
+      <form action="/auth/logout" method="POST" class="d-inline">
+        <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </form>
+    </div>
+  </header>
+  
+  <section class="add-task-section mb-4">
+    <a href="/tasks/new" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Add New Task
+    </a>
+    <a href="/time" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Timer
+    </a>
+  </section>
+  
+  <section class="filter-section card mb-4">
+    <div class="card-body">
+      <form method="GET" class="row g-3 align-items-center">
+        <div class="col-md-4">
+          <input type="text" name="keyword" class="form-control" 
+                 placeholder="Search tasks..." value="<%= typeof query !== 'undefined' ? query.keyword || '' : '' %>">
+        </div>
+        <div class="col-md-3">
+          <select name="priority" class="form-select">
+            <option value="">All Priorities</option>
+            <option value="low" <%= (typeof query !== 'undefined' && query.priority === 'low') ? 'selected' : '' %>>Low</option>
+            <option value="medium" <%= (typeof query !== 'undefined' && query.priority === 'medium') ? 'selected' : '' %>>Medium</option>
+            <option value="high" <%= (typeof query !== 'undefined' && query.priority === 'high') ? 'selected' : '' %>>High</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-secondary w-100">
+            <i class="fas fa-filter"></i> Filter
+          </button>
+        </div>
+        <div class="col-md-3">
+          <a href="/tasks" class="btn btn-outline-secondary w-100">
+            <i class="fas fa-refresh"></i> Clear
+          </a>
+        </div>
+      </form>
+    </div>
+  </section>
+  
+  <main class="tasks-dashboard">
+    <% if (tasks.length === 0) { %>
+      <div class="no-tasks text-center py-5">
+        <i class="fas fa-clipboard-list fa-4x mb-3"></i>
+        <h3>No Tasks Found</h3>
+        <p class="text-muted">Get started by adding your first task!</p>
+        <a href="/tasks/new" class="btn btn-primary">Add Your First Task</a>
+      </div>
+    <% } else { %>
+      <div class="row">
+        <% tasks.forEach(task => { %>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="task-card card h-100 <%= task.priority %>-priority 
+                        <%= task.status === 'completed' ? 'completed' : '' %>">
+              <div class="card-body">
+                <div class="task-header d-flex justify-content-between align-items-start mb-2">
+                  <h5 class="task-title card-title"><%= task.title %></h5>
+                  <span class="task-priority badge priority-<%= task.priority %>">
+                    <%= task.priority.toUpperCase() %>
+                  </span>
+                </div>
+                
+                <% if (task.description) { %>
+                  <p class="task-description card-text"><%= task.description %></p>
+                <% } %>
+                
+                <div class="task-meta">
+                  <div class="task-due-date mb-2">
+                    <i class="fas fa-calendar-alt"></i> 
+                    Due: <%= task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date' %>
+                  </div>
+                  <div class="task-status mb-3">
+                    <span class="badge bg-secondary">Status: <%= task.status %></span>
+                  </div>
+                </div>
+                
+                <div class="task-actions d-grid gap-2">
+              
+                  <a href="/tasks/<%= task._id %>/edit" class="btn btn-primary btn-sm">
+                    <i class="fas fa-edit"></i> Edit
+                  </a>
+              
+                  <form method="POST" action="/tasks/<%= task._id %>/delete">
+                    <button type="submit" class="btn btn-danger btn-sm w-100" 
+                            onclick="return confirm('Are you sure you want to delete this task?')">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </main>
+</div>

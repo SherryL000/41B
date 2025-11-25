@@ -1,0 +1,58 @@
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="mb-0"><i class="fas fa-edit"></i> Edit Task</h2>
+        </div>
+        <div class="card-body">
+          <!-- 修正表單 action -->
+          <form method="POST" action="/tasks/<%= task._id %>/edit">
+            <div class="mb-3">
+              <label class="form-label">Title *</label>
+              <input type="text" name="title" class="form-control" value="<%= task.title %>" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="3"><%= task.description %></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Due Date</label>
+              <input type="date" name="dueDate" class="form-control" 
+                     value="<%= task.dueDate ? task.dueDate.toISOString().split('T')[0] : '' %>">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Priority</label>
+              <select name="priority" class="form-select">
+                <option value="low" <%= task.priority === 'low' ? 'selected' : '' %>>Low</option>
+                <option value="medium" <%= task.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+                <option value="high" <%= task.priority === 'high' ? 'selected' : '' %>>High</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select name="status" class="form-select">
+                <option value="pending" <%= task.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="in-progress" <%= task.status === 'in-progress' ? 'selected' : '' %>>In Progress</option>
+                <option value="completed" <%= task.status === 'completed' ? 'selected' : '' %>>Completed</option>
+              </select>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Task
+              </button>
+              <a href="/tasks" class="btn btn-secondary">Back to Tasks</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
